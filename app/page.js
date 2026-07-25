@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Header from '../components/Header';
 import { 
   Search, 
   ChevronLeft, 
@@ -246,25 +247,7 @@ export default function Home() {
     <div className="min-h-screen bg-slate-50 text-slate-850 flex flex-col pb-20 md:pb-0">
       
       {/* Header */}
-      <header className="border-b border-slate-100 bg-white/90 backdrop-blur sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-10 w-10 rounded-xl bg-amber-500 flex items-center justify-center font-bold text-white text-xl shadow-md">
-              N
-            </div>
-            <div>
-              <span className="text-xl font-extrabold tracking-tight text-slate-900">ArcNester</span>
-              <span className="text-amber-500 font-bold ml-0.5">.store</span>
-            </div>
-          </div>
-          
-          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-500">
-            <Link href="/" className="text-amber-500 border-b-2 border-amber-500 pb-1">Browse Catalog</Link>
-            <Link href="/tools" className="hover:text-slate-900 transition">Estimator Tools</Link>
-            <Link href="/financing" className="hover:text-slate-900 transition">Loans & Insurance</Link>
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section with Architectural Blueprint Grid & Amber Glow */}
       <section 
@@ -519,7 +502,7 @@ export default function Home() {
                             />
                             {/* Central Elegant Diagonal Watermark */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-20">
-                              <span className="text-white/40 text-lg sm:text-xl font-extrabold tracking-widest uppercase transform -rotate-30 select-none pointer-events-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+                              <span className="text-white/40 text-sm md:text-lg lg:text-xl font-extrabold tracking-widest uppercase transform -rotate-30 select-none pointer-events-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
                                 ArcNester.store
                               </span>
                             </div>
@@ -683,7 +666,7 @@ function CarouselSection({ title, id, plans, getImageUrl, handleScroll }) {
                 />
                 {/* Central Elegant Diagonal Watermark */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-20">
-                  <span className="text-white/40 text-lg sm:text-xl font-extrabold tracking-widest uppercase transform -rotate-30 select-none pointer-events-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+                  <span className="text-white/40 text-sm md:text-lg lg:text-xl font-extrabold tracking-widest uppercase transform -rotate-30 select-none pointer-events-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
                     ArcNester.store
                   </span>
                 </div>

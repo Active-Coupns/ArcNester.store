@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Header from '../../../components/Header';
 import { 
   ChevronLeft, 
   ChevronRight,
@@ -425,18 +426,7 @@ export default function PlanDetailPage({ params }) {
       )}
 
       {/* Header */}
-      <header className="border-b border-slate-100 bg-white/90 backdrop-blur sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-1.5 text-sm font-bold text-slate-655 hover:text-slate-900 transition">
-            <ChevronLeft className="h-5 w-5" />
-            <span>Back to Catalog</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-extrabold text-slate-900">ArcNester</span>
-            <span className="text-amber-500 font-bold">.store</span>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* TOP CATEGORY ANCHORS */}
       {categories.length > 0 && (
@@ -492,7 +482,7 @@ export default function PlanDetailPage({ params }) {
 
               {/* Central Elegant Diagonal Watermark */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-20">
-                <span className="text-white/40 text-xl sm:text-2xl md:text-3xl font-extrabold tracking-widest uppercase transform -rotate-30 select-none pointer-events-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+                <span className="text-white/40 text-lg md:text-3xl font-extrabold tracking-widest uppercase transform -rotate-30 select-none pointer-events-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
                   ArcNester.store
                 </span>
               </div>
@@ -1234,7 +1224,7 @@ export default function PlanDetailPage({ params }) {
                     </div>
 
                     {/* Custom Inputs */}
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="flex flex-col gap-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Plot Width (Ft)</label>
                         <input
@@ -1259,7 +1249,7 @@ export default function PlanDetailPage({ params }) {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div className="flex flex-col gap-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Facing Direction</label>
                         <select
