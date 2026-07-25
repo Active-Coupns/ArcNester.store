@@ -123,7 +123,7 @@ export default function FinancingPage() {
       </section>
 
       {/* Offers Layout Grid */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 flex flex-col gap-16">
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 flex flex-col gap-16 overflow-x-hidden">
         {loading ? (
           <div className="text-center py-40">
             <Loader className="animate-spin h-12 w-12 text-amber-500 mx-auto" />

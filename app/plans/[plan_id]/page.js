@@ -430,8 +430,8 @@ export default function PlanDetailPage({ params }) {
 
       {/* TOP CATEGORY ANCHORS */}
       {categories.length > 0 && (
-        <div className="bg-white border-b border-slate-100 py-3.5 sticky top-20 z-40 shadow-sm overflow-x-auto scrollbar-none">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2.5">
+        <div className="bg-white border-b border-slate-100 py-3.5 sticky top-20 z-40 shadow-sm overflow-x-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center gap-2">
             <LayoutGrid className="h-4 w-4 text-slate-400 shrink-0" />
             <span className="text-xs font-bold text-slate-450 uppercase tracking-wider shrink-0 mr-2">Jump to category:</span>
             {categories.map((cat) => (
@@ -448,7 +448,7 @@ export default function PlanDetailPage({ params }) {
       )}
 
       {/* Main Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 flex flex-col gap-16">
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 flex flex-col gap-16 overflow-x-hidden">
         
         {/* Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
@@ -881,8 +881,8 @@ export default function PlanDetailPage({ params }) {
             {/* Horizontal Scrollable Carousel Container */}
             <div
               id="similar-plans-carousel"
-              className="flex gap-6 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory touch-pan-x"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              className="flex gap-6 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory touch-pan-y"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', touchAction: 'pan-y' }}
             >
               {similarPlans.map((simPlan) => {
                 const simImage = getImageUrl(simPlan.images?.['01_exterior_front_elevation']) || '/placeholder.jpg';

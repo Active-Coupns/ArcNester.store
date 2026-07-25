@@ -80,7 +80,7 @@ export default function ToolsPage() {
       </section>
 
       {/* Interactive Estimator Widget */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-30 flex-1">
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-30 flex-1 overflow-x-hidden">
         <div className="bg-white border border-slate-100 p-8 sm:p-10 rounded-3xl shadow-xl max-w-4xl mx-auto flex flex-col gap-6">
           
           {/* Tab Selector */}

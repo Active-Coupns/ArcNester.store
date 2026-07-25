@@ -352,7 +352,7 @@ export default function Home() {
                 const slider = document.getElementById('category-slider');
                 if (slider) slider.scrollBy({ left: -200, behavior: 'smooth' });
               }}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-slate-900/60 border border-slate-700 text-slate-300 flex items-center justify-center hover:bg-amber-500/20 hover:border-amber-500/40 hover:text-white transition active:scale-95 shadow-md"
+              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-slate-900/60 border border-slate-700 text-slate-300 items-center justify-center hover:bg-amber-500/20 hover:border-amber-500/40 hover:text-white transition active:scale-95 shadow-md"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -360,7 +360,7 @@ export default function Home() {
             {/* Carousel Container */}
             <div
               id="category-slider"
-              className="flex items-center gap-3 overflow-x-auto scrollbar-none scroll-smooth px-2 py-1"
+              className="flex flex-wrap md:flex-nowrap md:overflow-x-auto gap-2.5 scrollbar-none scroll-smooth px-2 py-1 justify-center md:justify-start"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {dynamicCategories.map((cat) => {
@@ -387,7 +387,7 @@ export default function Home() {
                 const slider = document.getElementById('category-slider');
                 if (slider) slider.scrollBy({ left: 200, behavior: 'smooth' });
               }}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-slate-900/60 border border-slate-700 text-slate-300 flex items-center justify-center hover:bg-amber-500/20 hover:border-amber-500/40 hover:text-white transition active:scale-95 shadow-md"
+              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-slate-900/60 border border-slate-700 text-slate-300 items-center justify-center hover:bg-amber-500/20 hover:border-amber-500/40 hover:text-white transition active:scale-95 shadow-md"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -396,7 +396,7 @@ export default function Home() {
       </section>
 
       {/* Main Slides Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 flex flex-col gap-16">
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 flex flex-col gap-16 overflow-x-hidden">
         
         {loading ? (
           <div className="flex justify-center items-center py-40">
@@ -632,8 +632,8 @@ function CarouselSection({ title, id, plans, getImageUrl, handleScroll }) {
       {/* Horizontal Carousel Scroller */}
       <div
         id={id}
-        className="flex gap-6 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory touch-pan-x"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="flex gap-6 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory touch-pan-y"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', touchAction: 'pan-y' }}
       >
         {plans.map((plan) => {
           const previewImage = getImageUrl(plan.images?.['01_exterior_front_elevation'], plan) || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80';

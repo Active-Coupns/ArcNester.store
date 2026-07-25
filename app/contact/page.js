@@ -58,7 +58,7 @@ export default function ContactPage() {
       <Header />
 
       {/* Main Grid Content */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1 flex flex-col gap-10">
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1 flex flex-col gap-10 overflow-x-hidden">
         <div className="text-center">
           <span className="text-amber-600 font-mono text-xs uppercase tracking-widest font-bold">Get In Touch</span>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 mb-4 tracking-tight leading-tight">
