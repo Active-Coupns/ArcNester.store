@@ -31,28 +31,28 @@ export default function Header() {
     <header className="border-b border-slate-100 bg-white/90 backdrop-blur sticky top-0 z-50 shadow-sm w-full">
       {/* Sticky Top Announcement Banner */}
       {!isDismissed && (
-        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 py-2.5 px-4 w-full relative z-50 flex items-center justify-between text-xs sm:text-sm font-medium shadow-md transition-all duration-300">
-          <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-2.5 text-center pr-8 sm:pr-0">
-            <span className="inline-flex items-center gap-1 bg-slate-950/15 border border-slate-950/20 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider animate-pulse shadow-sm">
+        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 py-1.5 sm:py-2.5 px-2 sm:px-4 w-full relative z-50 flex items-center justify-between text-[10px] sm:text-xs md:text-sm font-medium shadow-md transition-all duration-300">
+          <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-1.5 sm:gap-2.5 text-center pr-6 sm:pr-0">
+            <span className="inline-flex items-center gap-1 bg-slate-950/15 border border-slate-950/20 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[8px] sm:text-[10px] font-bold uppercase tracking-wider animate-pulse shadow-sm">
               Today's Offer
             </span>
-            <span className="flex items-center gap-1.5 leading-snug">
+            <span className="flex items-center gap-1 leading-snug">
               <span>🏦</span>
               <span>Need Financing for your Home Plan? Instant Home Loan & Construction Insurance Available!</span>
             </span>
             <Link 
               href="/financing" 
-              className="bg-slate-950 text-amber-400 font-bold px-3 py-1 rounded-full text-[11px] hover:bg-slate-800 transition shadow-sm shrink-0 whitespace-nowrap"
+              className="bg-slate-950 text-amber-400 font-bold px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[9px] sm:text-[11px] hover:bg-slate-800 transition shadow-sm shrink-0 whitespace-nowrap"
             >
               Check Loan Offers →
             </Link>
           </div>
           <button
             onClick={handleDismiss}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-slate-950/10 rounded-full transition text-slate-800 hover:text-slate-950 cursor-pointer"
+            className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-950/10 rounded-full transition text-slate-800 hover:text-slate-950 cursor-pointer"
             aria-label="Dismiss announcement"
           >
-            <X className="h-4.5 w-4.5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
       )}
