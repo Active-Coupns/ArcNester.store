@@ -219,6 +219,28 @@ export default function Home() {
   const villasList = getFilteredList('villas_duplex');
   const farmhouseList = getFilteredList('farmhouse_barn');
 
+  const handleViewAll = (categoryType) => {
+    if (categoryType === 'featured') {
+      setActiveChip('All');
+      const el = document.getElementById('search-bar-container');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      let match = 'All';
+      if (categoryType === '1bhk') {
+        match = dynamicCategories.find(c => c.toLowerCase().includes('1bhk') || c.toLowerCase().includes('tiny')) || 'All';
+      } else if (categoryType === '2bhk_3bhk') {
+        match = dynamicCategories.find(c => c.toLowerCase().includes('2bhk') || c.toLowerCase().includes('3bhk')) || 'All';
+      } else if (categoryType === 'villas_duplex') {
+        match = dynamicCategories.find(c => c.toLowerCase().includes('villa') || c.toLowerCase().includes('duplex') || c.toLowerCase().includes('haveli')) || 'All';
+      } else if (categoryType === 'farmhouse_barn') {
+        match = dynamicCategories.find(c => c.toLowerCase().includes('farm') || c.toLowerCase().includes('barn') || c.toLowerCase().includes('ranch')) || 'All';
+      }
+      setActiveChip(match);
+      const el = document.getElementById('category-slider');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   // Unified dynamic filtering logic (case-insensitive & formatting-tolerant)
   const displayedPlans = activeChip === 'All'
     ? plans
@@ -333,7 +355,7 @@ export default function Home() {
           </p>
 
           {/* Search Bar Input Container wrapped in Sleek Glassmorphism */}
-          <div className="max-w-2xl mx-auto relative mb-8 p-2.5 backdrop-blur-lg bg-white/10 border border-white/20 shadow-2xl rounded-2xl transition-all duration-300 hover:border-white/30 hover:bg-white/15">
+          <div id="search-bar-container" className="max-w-2xl mx-auto relative mb-8 p-2.5 backdrop-blur-lg bg-white/10 border border-white/20 shadow-2xl rounded-2xl transition-all duration-300 hover:border-white/30 hover:bg-white/15">
             <Search className="absolute left-6 top-6 h-5 w-5 text-slate-200" />
             <input
               type="text"
@@ -414,6 +436,7 @@ export default function Home() {
                     plans={featuredList}
                     getImageUrl={getImageUrl}
                     handleScroll={handleScroll}
+                    onViewAll={() => handleViewAll('featured')}
                   />
                 )}
 
@@ -425,6 +448,7 @@ export default function Home() {
                     plans={b1hkList}
                     getImageUrl={getImageUrl}
                     handleScroll={handleScroll}
+                    onViewAll={() => handleViewAll('1bhk')}
                   />
                 )}
 
@@ -436,6 +460,7 @@ export default function Home() {
                     plans={b2hk3hkList}
                     getImageUrl={getImageUrl}
                     handleScroll={handleScroll}
+                    onViewAll={() => handleViewAll('2bhk_3bhk')}
                   />
                 )}
 
@@ -447,6 +472,7 @@ export default function Home() {
                     plans={villasList}
                     getImageUrl={getImageUrl}
                     handleScroll={handleScroll}
+                    onViewAll={() => handleViewAll('villas_duplex')}
                   />
                 )}
 
@@ -458,6 +484,7 @@ export default function Home() {
                     plans={farmhouseList}
                     getImageUrl={getImageUrl}
                     handleScroll={handleScroll}
+                    onViewAll={() => handleViewAll('farmhouse_barn')}
                   />
                 )}
               </>
@@ -490,6 +517,7 @@ export default function Home() {
                                 e.target.onError = null;
                                 e.target.src = getFallbackImage(plan.plan_id);
                               }}
+                              onContextMenu={(e) => e.preventDefault()}
                               className="w-full h-full object-cover group-hover:scale-105 transition duration-500 select-none"
                             />
                             {/* Repeating Diagonal Watermark Shield */}
@@ -506,11 +534,7 @@ export default function Home() {
                                 ArcNester.store
                               </span>
                             </div>
-                            {/* Invisible Click/Right-Click Protection Shield */}
-                            <div 
-                              className="absolute inset-0 z-20 cursor-pointer"
-                              onContextMenu={(e) => e.preventDefault()}
-                            />
+
                           </Link>
 
                           <div className="p-5 flex flex-col flex-1 justify-between">
@@ -598,7 +622,7 @@ export default function Home() {
 }
 
 // Reusable Carousel Section Component
-function CarouselSection({ title, id, plans, getImageUrl, handleScroll }) {
+function CarouselSection({ title, id, plans, getImageUrl, handleScroll, onViewAll }) {
   return (
     <div className="flex flex-col">
       {/* Title Header with Slider Navigation */}
@@ -623,7 +647,10 @@ function CarouselSection({ title, id, plans, getImageUrl, handleScroll }) {
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
-          <span className="text-xs font-bold text-amber-600 hover:text-amber-500 transition cursor-pointer flex items-center gap-0.5">
+          <span 
+            onClick={onViewAll}
+            className="text-xs font-bold text-amber-600 hover:text-amber-500 transition cursor-pointer flex items-center gap-0.5 z-10 pointer-events-auto"
+          >
             <span>View All</span>
             <ArrowRight className="h-3 w-3" />
           </span>
@@ -655,6 +682,7 @@ function CarouselSection({ title, id, plans, getImageUrl, handleScroll }) {
                     e.target.onError = null;
                     e.target.src = getFallbackImage(plan.plan_id);
                   }}
+                  onContextMenu={(e) => e.preventDefault()}
                   className="w-full h-full object-cover group-hover:scale-105 transition duration-500 select-none"
                 />
                 {/* Repeating Diagonal Watermark Shield */}
@@ -671,11 +699,7 @@ function CarouselSection({ title, id, plans, getImageUrl, handleScroll }) {
                     ArcNester.store
                   </span>
                 </div>
-                {/* Invisible Click/Right-Click Protection Shield */}
-                <div 
-                  className="absolute inset-0 z-20 cursor-pointer"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
+
               </Link>
 
               {/* Details card content */}

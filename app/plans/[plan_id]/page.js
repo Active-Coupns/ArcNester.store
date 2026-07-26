@@ -428,15 +428,15 @@ export default function PlanDetailPage({ params }) {
 
       {/* TOP CATEGORY ANCHORS */}
       {categories.length > 0 && (
-        <div className="bg-white border-b border-slate-100 py-3.5 sticky top-20 z-40 shadow-sm overflow-x-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center gap-2">
+        <div className="bg-white border-b border-slate-100 py-3.5 sticky top-20 z-40 shadow-sm overflow-x-auto no-scrollbar whitespace-nowrap" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2">
             <LayoutGrid className="h-4 w-4 text-slate-400 shrink-0" />
-            <span className="text-xs font-bold text-slate-450 uppercase tracking-wider shrink-0 mr-2">Jump to category:</span>
+            <span className="text-xs font-bold text-slate-455 uppercase tracking-wider shrink-0 mr-2">Jump to category:</span>
             {categories.map((cat) => (
               <Link
                 key={cat}
                 href={`/?category=${cat}`}
-                className="px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-100 transition whitespace-nowrap"
+                className="px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-100 transition shrink-0"
               >
                 {cat.replace(/_/g, ' ')}
               </Link>
@@ -485,12 +485,7 @@ export default function PlanDetailPage({ params }) {
                 </span>
               </div>
               
-              {/* Invisible Click/Right-Click Protection Shield */}
-              <div 
-                className="absolute inset-0 z-20"
-                style={{ margin: '12px', borderRadius: '16px' }}
-                onContextMenu={(e) => e.preventDefault()}
-              />
+
               
               <div className="absolute bottom-6 right-6 flex gap-2 z-30">
                 <button 
