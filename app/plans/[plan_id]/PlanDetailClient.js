@@ -167,8 +167,10 @@ export default function PlanDetailPage({ params }) {
               const { data: fallbackData } = await supabase
                 .from('house_plans')
                 .select('*')
+                .eq('category', 'compact_1bhk')
                 .eq('bedrooms', data.bedrooms || 0)
-                .neq('plan_id', plan_id);
+                .neq('plan_id', plan_id)
+                .limit(10);
               finalSimilar = fallbackData || [];
             }
             setSimilarPlans(finalSimilar);
@@ -178,7 +180,9 @@ export default function PlanDetailPage({ params }) {
           const { data: allPlans, error: allPlansError } = await supabase
             .from('house_plans')
             .select('*')
-            .order('plan_id', { ascending: true });
+            .eq('category', 'compact_1bhk')
+            .order('plan_id', { ascending: true })
+            .limit(10);
 
           if (!allPlansError && allPlans) {
             // Unique categories list

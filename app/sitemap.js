@@ -7,7 +7,9 @@ export default async function sitemap() {
   try {
     const { data, error } = await supabase
       .from('house_plans')
-      .select('plan_id, created_at');
+      .select('plan_id, created_at')
+      .eq('category', 'compact_1bhk')
+      .limit(10);
     
     if (!error && data) {
       plans = data;

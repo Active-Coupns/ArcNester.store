@@ -60,9 +60,11 @@ export default function Home() {
         let { data, error } = await supabase
           .from('house_plans')
           .select('*')
+          .eq('category', 'compact_1bhk')
           .eq('is_published', true)
           .lte('published_at', new Date().toISOString())
-          .order('plan_id', { ascending: true });
+          .order('plan_id', { ascending: true })
+          .limit(10);
 
         // Backward compatibility fallback in case schema has not been updated yet
         if (error && (error.message.includes('column') || error.code === 'PGRST204')) {
@@ -70,7 +72,9 @@ export default function Home() {
           const fallbackRes = await supabase
             .from('house_plans')
             .select('*')
-            .order('plan_id', { ascending: true });
+            .eq('category', 'compact_1bhk')
+            .order('plan_id', { ascending: true })
+            .limit(10);
           data = fallbackRes.data;
           error = fallbackRes.error;
         }
@@ -79,7 +83,7 @@ export default function Home() {
           console.error("Supabase Error:", error);
           throw error;
         }
-        setPlans((data || []).slice(0, 10));
+        setPlans(data || []);
       } catch (err) {
         console.error('Error fetching plans:', err);
       } finally {
