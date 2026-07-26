@@ -7,3 +7,14 @@
     @apply antialiased;
   }
 }
+
+body.has-banner {
+  padding-top: 38px;
+  transition: padding-top 0.3s ease-in-out;
+}
+
+@media (min-width: 640px) {
+  body.has-banner {
+    padding-top: 48px;
+  }
+}
