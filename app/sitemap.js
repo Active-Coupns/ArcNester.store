@@ -1,7 +1,7 @@
 import { supabase } from '../lib/supabaseClient';
 
 export default async function sitemap() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://house-plans-portal.vercel.app';
 
   let plans = [];
   try {

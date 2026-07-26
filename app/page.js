@@ -79,7 +79,7 @@ export default function Home() {
           console.error("Supabase Error:", error);
           throw error;
         }
-        setPlans(data || []);
+        setPlans((data || []).slice(0, 10));
       } catch (err) {
         console.error('Error fetching plans:', err);
       } finally {
