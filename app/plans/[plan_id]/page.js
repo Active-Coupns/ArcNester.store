@@ -398,10 +398,8 @@ export default function PlanDetailPage({ params }) {
       <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-center items-center p-4">
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Plan Package Not Found</h2>
         <p className="text-slate-500 mb-6">The requested plan ID ({plan_id}) could not be resolved.</p>
-        <Link href="/">
-          <button className="bg-amber-500 text-slate-950 font-bold px-6 py-2.5 rounded-xl text-sm transition hover:bg-amber-400">
-            Back to Catalog
-          </button>
+        <Link href="/" className="bg-amber-500 text-slate-950 font-bold px-6 py-2.5 rounded-xl text-sm transition hover:bg-amber-400 inline-block text-center">
+          Back to Catalog
         </Link>
       </div>
     );
@@ -415,7 +413,7 @@ export default function PlanDetailPage({ params }) {
   const calcBricks = Math.round(baseArea * 9);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col pb-24 md:pb-0">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col pb-24 md:pb-0 w-full max-w-full overflow-x-hidden">
       
       {/* JSON-LD Schema Script Injection */}
       {schemaMarkup && (
@@ -890,7 +888,7 @@ export default function PlanDetailPage({ params }) {
                 return (
                   <div
                     key={simPlan.plan_id}
-                    className="snap-start shrink-0 w-[80vw] sm:w-[320px] md:w-[350px] bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl hover:border-slate-200 transition-all duration-300 flex flex-col justify-between"
+                    className="snap-start shrink-0 w-full max-w-[calc(100vw-2rem)] sm:w-[320px] md:w-[350px] mx-auto bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl hover:border-slate-200 transition-all duration-300 flex flex-col justify-between"
                   >
                     {/* Image Preview with Hover Zoom */}
                     <Link
@@ -1387,7 +1385,7 @@ export default function PlanDetailPage({ params }) {
       <footer className="border-t border-slate-100 bg-white py-12 text-slate-500 text-sm text-center">
         <p>© {new Date().getFullYear()} ArcNester.store Architectural Studio. All rights reserved.</p>
         <p className="mt-2 text-slate-400 font-light">Engineered premium layout drawings for general contractors and building builders.</p>
-        <div className="flex justify-center gap-6 mt-4 text-xs font-semibold text-slate-400">
+        <div className="flex flex-wrap justify-center gap-4 mt-4 text-xs font-semibold text-slate-400 text-center px-4">
           <Link href="/about" className="hover:text-amber-500 transition">About Us</Link>
           <Link href="/privacy-policy" className="hover:text-amber-500 transition">Privacy Policy</Link>
           <Link href="/terms" className="hover:text-amber-500 transition">Terms of Service</Link>

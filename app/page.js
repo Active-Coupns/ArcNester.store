@@ -244,7 +244,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-850 flex flex-col pb-20 md:pb-0">
+    <div className="min-h-screen bg-slate-50 text-slate-850 flex flex-col pb-20 md:pb-0 w-full max-w-full overflow-x-hidden">
       
       {/* Header */}
       <Header />
@@ -345,7 +345,7 @@ export default function Home() {
           </div>
 
           {/* Responsive Category Carousel Slider with Left/Right controls */}
-          <div className="max-w-4xl mx-auto relative px-10 mt-8">
+          <div className="max-w-4xl mx-auto relative px-4 md:px-10 mt-8">
             {/* Left Button */}
             <button
               onClick={() => {
@@ -360,7 +360,7 @@ export default function Home() {
             {/* Carousel Container */}
             <div
               id="category-slider"
-              className="flex flex-wrap md:flex-nowrap md:overflow-x-auto gap-2.5 scrollbar-none scroll-smooth px-2 py-1 justify-center md:justify-start"
+              className="flex overflow-x-auto gap-2.5 py-2 px-4 whitespace-nowrap scroll-smooth no-scrollbar scrollbar-none justify-start md:justify-center w-full max-w-full"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {dynamicCategories.map((cat) => {
@@ -544,11 +544,12 @@ export default function Home() {
                             </div>
 
                             <div className="mt-5">
-                              <Link href={`/plans/${plan.plan_id}`}>
-                                <button className="w-full py-2.5 bg-slate-50 hover:bg-amber-500 hover:text-white border border-slate-200 hover:border-transparent font-bold text-slate-700 rounded-xl transition duration-300 text-xs flex items-center justify-center gap-1">
-                                  <span>View Plan Details</span>
-                                  <ArrowRight className="h-3 w-3" />
-                                </button>
+                              <Link 
+                                href={`/plans/${plan.plan_id}`}
+                                className="w-full py-2.5 bg-slate-50 hover:bg-amber-500 hover:text-white border border-slate-200 hover:border-transparent font-bold text-slate-700 rounded-xl transition duration-300 text-xs flex items-center justify-center gap-1 text-center"
+                              >
+                                <span>View Plan Details</span>
+                                <ArrowRight className="h-3 w-3" />
                               </Link>
                             </div>
                           </div>
@@ -566,7 +567,7 @@ export default function Home() {
       <footer className="border-t border-slate-100 bg-white py-12 text-slate-500 text-sm text-center">
         <p>© {new Date().getFullYear()} ArcNester.store Architectural Studio. All rights reserved.</p>
         <p className="mt-2 text-slate-400 font-light">Engineered premium layout drawings for general contractors and building builders.</p>
-        <div className="flex justify-center gap-6 mt-4 text-xs font-semibold text-slate-400">
+        <div className="flex flex-wrap justify-center gap-4 mt-4 text-xs font-semibold text-slate-400 text-center px-4">
           <Link href="/about" className="hover:text-amber-500 transition">About Us</Link>
           <Link href="/privacy-policy" className="hover:text-amber-500 transition">Privacy Policy</Link>
           <Link href="/terms" className="hover:text-amber-500 transition">Terms of Service</Link>
@@ -641,7 +642,7 @@ function CarouselSection({ title, id, plans, getImageUrl, handleScroll }) {
           return (
             <div
               key={plan.plan_id}
-              className="snap-start shrink-0 w-[80vw] sm:w-[320px] md:w-[350px] bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl hover:border-slate-200 transition-all duration-300 flex flex-col justify-between"
+              className="snap-start shrink-0 w-full max-w-[calc(100vw-2rem)] sm:w-[320px] md:w-[350px] mx-auto bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl hover:border-slate-200 transition-all duration-300 flex flex-col justify-between"
             >
               {/* Image Preview with Hover Zoom and Watermark protection */}
               <Link href={`/plans/${plan.plan_id}`} className="cursor-pointer block relative aspect-[4/3] overflow-hidden bg-slate-100 group">
@@ -713,11 +714,12 @@ function CarouselSection({ title, id, plans, getImageUrl, handleScroll }) {
 
                 {/* CTA Action button */}
                 <div className="mt-5">
-                  <Link href={`/plans/${plan.plan_id}`}>
-                    <button className="w-full py-2.5 bg-slate-50 hover:bg-amber-500 hover:text-white border border-slate-200 hover:border-transparent font-bold text-slate-700 rounded-xl transition duration-300 text-xs flex items-center justify-center gap-1">
-                      <span>View Plan Details</span>
-                      <ArrowRight className="h-3 w-3" />
-                    </button>
+                  <Link 
+                    href={`/plans/${plan.plan_id}`}
+                    className="w-full py-2.5 bg-slate-50 hover:bg-amber-500 hover:text-white border border-slate-200 hover:border-transparent font-bold text-slate-700 rounded-xl transition duration-300 text-xs flex items-center justify-center gap-1 text-center"
+                  >
+                    <span>View Plan Details</span>
+                    <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>
               </div>

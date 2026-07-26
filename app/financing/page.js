@@ -99,7 +99,7 @@ export default function FinancingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-850 flex flex-col pb-24 md:pb-0">
+    <div className="min-h-screen bg-slate-50 text-slate-850 flex flex-col pb-24 md:pb-0 w-full max-w-full overflow-x-hidden">
       
       {/* Header */}
       <Header />
@@ -200,7 +200,7 @@ export default function FinancingPage() {
       <footer className="border-t border-slate-100 bg-white py-12 text-slate-500 text-sm text-center mt-auto">
         <p>© {new Date().getFullYear()} ArcNester.store Architectural Studio. All rights reserved.</p>
         <p className="mt-2 text-slate-400 font-light">Engineered premium layout drawings for general contractors and building builders.</p>
-        <div className="flex justify-center gap-6 mt-4 text-xs font-semibold text-slate-400">
+        <div className="flex flex-wrap justify-center gap-4 mt-4 text-xs font-semibold text-slate-400 text-center px-4">
           <Link href="/about" className="hover:text-amber-500 transition">About Us</Link>
           <Link href="/privacy-policy" className="hover:text-amber-500 transition">Privacy Policy</Link>
           <Link href="/terms" className="hover:text-amber-500 transition">Terms of Service</Link>
