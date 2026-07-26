@@ -35,6 +35,7 @@ export default function PlanDetailPage({ params }) {
   const [plan, setPlan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState('');
+  const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
   const [similarPlans, setSimilarPlans] = useState([]);
   const [otherCategoryPlans, setOtherCategoryPlans] = useState([]);
@@ -148,6 +149,7 @@ export default function PlanDetailPage({ params }) {
           );
           const firstImgKey = sortedKeys[0];
           setSelectedImage(getImageUrl(data.images[firstImgKey]));
+          setActiveImgIndex(0);
         }
 
         // Fetch similar plans and other category representatives
@@ -412,6 +414,9 @@ export default function PlanDetailPage({ params }) {
   const calcSteel = ((baseArea * 1.8) / 1000).toFixed(2);
   const calcBricks = Math.round(baseArea * 9);
 
+  const sortedImageKeys = plan && plan.images ? Object.keys(plan.images).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })) : [];
+  const sortedImageUrls = sortedImageKeys.map(key => getImageUrl(plan.images[key]));
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col pb-24 md:pb-0 w-full max-w-full overflow-x-hidden">
       
@@ -511,7 +516,12 @@ export default function PlanDetailPage({ params }) {
                   return (
                     <button
                       key={key}
-                      onClick={() => setSelectedImage(url)}
+                      onClick={() => {
+                        setSelectedImage(url);
+                        setActiveImgIndex(idx);
+                        const el = document.getElementById(`showcase-slide-${idx}`);
+                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                      }}
                       onContextMenu={(e) => e.preventDefault()}
                       className={`aspect-square rounded-2xl overflow-hidden bg-slate-100 border-2 transition duration-200 p-0.5 relative block group ${
                         isSelected ? 'border-amber-500 scale-95 shadow-md' : 'border-slate-200 hover:border-slate-400'
