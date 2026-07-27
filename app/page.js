@@ -255,8 +255,20 @@ export default function Home() {
       );
 
 
-  // Extract all categories dynamically from plans list
-  const dynamicCategories = ['All', ...new Set(plans.map(p => p.category).filter(Boolean))];
+  // Static list of all available categories
+  const categoriesList = [
+    'All',
+    'compact_1bhk',
+    'modern_2bhk',
+    'budget_3bhk',
+    'contemporary_luxury_villa',
+    'farm_house_plan',
+    'barndominium',
+    'tiny_house_micro_cabin',
+    'english_cottage_craftsman',
+    'kerala_sloping_roof',
+    'scandi_minimalist_a_frame'
+  ];
 
   const formatCategoryName = (cat) => {
     if (!cat) return '';
@@ -389,7 +401,7 @@ export default function Home() {
               className="flex overflow-x-auto gap-2.5 py-2 px-4 whitespace-nowrap scroll-smooth no-scrollbar scrollbar-none justify-start md:justify-center w-full max-w-full"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
-              {dynamicCategories.map((cat) => {
+              {categoriesList.map((cat) => {
                 const isActive = activeChip === cat;
                 return (
                   <button
@@ -501,10 +513,30 @@ export default function Home() {
                   <p className="text-slate-400 text-xs mt-1">Found {displayedPlans.length} design options matching your selection</p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                  {displayedPlans
-                    .filter((p) => !searchQuery || matchPlan(p, searchQuery))
-                    .map((plan) => {
+                {displayedPlans.length === 0 ? (
+                  <div className="bg-white rounded-3xl border border-slate-100 p-8 sm:p-12 text-center max-w-xl mx-auto shadow-sm flex flex-col items-center gap-6 mt-4 w-full">
+                    <div className="h-16 w-16 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500">
+                      <LayoutGrid className="h-8 w-8 animate-pulse" />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <h3 className="text-lg font-extrabold text-slate-900">No Plans Uploaded Yet in This Category</h3>
+                      <p className="text-slate-450 text-xs font-light leading-relaxed">
+                        We are publishing 10 new architectural blueprints daily! Stay tuned or request a custom layout.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setActiveChip('compact_1bhk')}
+                      className="px-6 py-3 bg-slate-900 text-amber-400 hover:bg-slate-800 font-bold rounded-xl transition text-xs flex items-center gap-1 cursor-pointer mx-auto"
+                    >
+                      <span>View Available 1 BHK Plans</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    {displayedPlans
+                      .filter((p) => !searchQuery || matchPlan(p, searchQuery))
+                      .map((plan) => {
                       const previewImage = getImageUrl(plan.images?.['01_exterior_front_elevation'], plan) || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80';
                       return (
                         <div
@@ -584,7 +616,8 @@ export default function Home() {
                         </div>
                       );
                     })}
-                </div>
+                  </div>
+                )}
               </div>
             )}
           </>

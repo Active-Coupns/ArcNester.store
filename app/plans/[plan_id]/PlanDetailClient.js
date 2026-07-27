@@ -185,9 +185,20 @@ export default function PlanDetailPage({ params }) {
             .limit(10);
 
           if (!allPlansError && allPlans) {
-            // Unique categories list
-            const uniqueCats = Array.from(new Set(allPlans.map((p) => p.category))).filter(Boolean);
-            setCategories(uniqueCats);
+            // Static list of all available categories
+            const staticCategories = [
+              'compact_1bhk',
+              'modern_2bhk',
+              'budget_3bhk',
+              'contemporary_luxury_villa',
+              'farm_house_plan',
+              'barndominium',
+              'tiny_house_micro_cabin',
+              'english_cottage_craftsman',
+              'kerala_sloping_roof',
+              'scandi_minimalist_a_frame'
+            ];
+            setCategories(staticCategories);
 
             // Group representatives: take 1st plan of every other category
             const otherCatsMap = {};
