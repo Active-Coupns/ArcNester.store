@@ -1,13 +1,13 @@
 import { supabase } from '../lib/supabaseClient';
 
 export default async function sitemap() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://house-plans-portal.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.arcnester.store';
 
   let plans = [];
   try {
     const { data, error } = await supabase
       .from('house_plans')
-      .select('plan_id, created_at');
+      .select('plan_id, category, is_published, raw_json, seo_data, created_at');
     
     if (!error && data) {
       plans = data;
@@ -66,7 +66,7 @@ export default async function sitemap() {
 
   const planRoutes = mappedPlans.map((plan) => ({
     url: `${baseUrl}/plans/${plan.plan_id}`,
-    lastModified: plan.created_at ? new Date(plan.created_at) : new Date(),
+    lastModified: new Date(),
     changeFrequency: 'weekly',
     priority: 0.8,
   }));
