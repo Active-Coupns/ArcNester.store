@@ -39,7 +39,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  const gaId = process.env.NEXT_PUBLIC_GA_ID || 'G-L4M8Y18CK5';
 
   return (
     <html lang="en" className="overflow-x-hidden w-full max-w-full">
