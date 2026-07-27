@@ -60,11 +60,9 @@ export default function Home() {
         let { data, error } = await supabase
           .from('house_plans')
           .select('*')
-          .eq('category', 'compact_1bhk')
           .eq('is_published', true)
           .lte('published_at', new Date().toISOString())
-          .order('plan_id', { ascending: true })
-          .limit(10);
+          .order('plan_id', { ascending: true });
 
         // Backward compatibility fallback in case schema has not been updated yet
         if (error && (error.message.includes('column') || error.code === 'PGRST204')) {
@@ -72,9 +70,7 @@ export default function Home() {
           const fallbackRes = await supabase
             .from('house_plans')
             .select('*')
-            .eq('category', 'compact_1bhk')
-            .order('plan_id', { ascending: true })
-            .limit(10);
+            .order('plan_id', { ascending: true });
           data = fallbackRes.data;
           error = fallbackRes.error;
         }
@@ -83,7 +79,30 @@ export default function Home() {
           console.error("Supabase Error:", error);
           throw error;
         }
-        setPlans(data || []);
+        
+        let counter1bhk = 0;
+        const mapped = (data || []).map(p => {
+          let categoryId = '1bhk';
+          const cat = p.category?.toLowerCase() || '';
+          if (cat.includes('1bhk') || cat.includes('tiny')) categoryId = '1bhk';
+          else if (cat.includes('2bhk')) categoryId = '2bhk';
+          else if (cat.includes('3bhk')) categoryId = '3bhk';
+          else if (cat.includes('villa') || cat.includes('duplex') || cat.includes('luxury') || cat.includes('spanish') || cat.includes('haveli')) categoryId = 'villas';
+          else if (cat.includes('farm') || cat.includes('barn') || cat.includes('ranch') || cat.includes('a_frame')) categoryId = 'farmhouse';
+          else categoryId = p.category || '1bhk';
+
+          let isPub = false;
+          if (categoryId === '1bhk' && counter1bhk < 10) {
+            isPub = true;
+            counter1bhk++;
+          }
+          return {
+            ...p,
+            category_id: categoryId,
+            isPublished: isPub
+          };
+        });
+        setPlans(mapped);
       } catch (err) {
         console.error('Error fetching plans:', err);
       } finally {
@@ -194,7 +213,7 @@ export default function Home() {
 
   // Filter plans based on search bar
   const getFilteredList = (categoryType) => {
-    let list = plans;
+    let list = plans.filter(p => p.isPublished);
 
     // Apply smart flexible search query
     if (searchQuery.trim()) {
@@ -205,13 +224,13 @@ export default function Home() {
     if (categoryType === 'featured') {
       return list.slice(0, 12);
     } else if (categoryType === '1bhk') {
-      return list.filter((p) => p.bedrooms === 1 || p.category?.toLowerCase().includes('1bhk') || p.category?.toLowerCase().includes('tiny'));
+      return list.filter((p) => p.category_id === '1bhk');
     } else if (categoryType === '2bhk_3bhk') {
-      return list.filter((p) => p.bedrooms === 2 || p.bedrooms === 3 || p.category?.toLowerCase().includes('2bhk') || p.category?.toLowerCase().includes('3bhk'));
+      return list.filter((p) => p.category_id === '2bhk' || p.category_id === '3bhk');
     } else if (categoryType === 'villas_duplex') {
-      return list.filter((p) => p.category?.toLowerCase().includes('villa') || p.category?.toLowerCase().includes('duplex') || p.category?.toLowerCase().includes('haveli'));
+      return list.filter((p) => p.category_id === 'villas');
     } else if (categoryType === 'farmhouse_barn') {
-      return list.filter((p) => p.category?.toLowerCase().includes('farm') || p.category?.toLowerCase().includes('barn') || p.category?.toLowerCase().includes('a_frame'));
+      return list.filter((p) => p.category_id === 'farmhouse');
     }
 
     return list;
@@ -229,45 +248,26 @@ export default function Home() {
       const el = document.getElementById('search-bar-container');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     } else {
-      let match = 'All';
-      if (categoryType === '1bhk') {
-        match = dynamicCategories.find(c => c.toLowerCase().includes('1bhk') || c.toLowerCase().includes('tiny')) || 'All';
-      } else if (categoryType === '2bhk_3bhk') {
-        match = dynamicCategories.find(c => c.toLowerCase().includes('2bhk') || c.toLowerCase().includes('3bhk')) || 'All';
-      } else if (categoryType === 'villas_duplex') {
-        match = dynamicCategories.find(c => c.toLowerCase().includes('villa') || c.toLowerCase().includes('duplex') || c.toLowerCase().includes('haveli')) || 'All';
-      } else if (categoryType === 'farmhouse_barn') {
-        match = dynamicCategories.find(c => c.toLowerCase().includes('farm') || c.toLowerCase().includes('barn') || c.toLowerCase().includes('ranch')) || 'All';
-      }
-      setActiveChip(match);
+      setActiveChip(categoryType);
       const el = document.getElementById('category-slider');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  // Unified dynamic filtering logic (case-insensitive & formatting-tolerant)
+  // Dynamic filtering logic
   const displayedPlans = activeChip === 'All'
-    ? plans
-    : plans.filter(
-        (p) =>
-          p.category?.toLowerCase() === activeChip?.toLowerCase() ||
-          p.category?.toLowerCase().replace(/_/g, ' ').replace(/[\s-]/g, '') === activeChip?.toLowerCase().replace(/_/g, ' ').replace(/[\s-]/g, '')
-      );
+    ? plans.filter(p => p.isPublished)
+    : plans.filter(p => p.category_id === activeChip && p.isPublished);
 
 
   // Static list of all available categories
   const categoriesList = [
     'All',
-    'compact_1bhk',
-    'modern_2bhk',
-    'budget_3bhk',
-    'contemporary_luxury_villa',
-    'farm_house_plan',
-    'barndominium',
-    'tiny_house_micro_cabin',
-    'english_cottage_craftsman',
-    'kerala_sloping_roof',
-    'scandi_minimalist_a_frame'
+    '1bhk',
+    '2bhk',
+    '3bhk',
+    'villas',
+    'farmhouse'
   ];
 
   const formatCategoryName = (cat) => {
@@ -476,7 +476,7 @@ export default function Home() {
                     plans={b2hk3hkList}
                     getImageUrl={getImageUrl}
                     handleScroll={handleScroll}
-                    onViewAll={() => handleViewAll('2bhk_3bhk')}
+                    onViewAll={() => handleViewAll('2bhk')}
                   />
                 )}
 
@@ -488,7 +488,7 @@ export default function Home() {
                     plans={villasList}
                     getImageUrl={getImageUrl}
                     handleScroll={handleScroll}
-                    onViewAll={() => handleViewAll('villas_duplex')}
+                    onViewAll={() => handleViewAll('villas')}
                   />
                 )}
 
@@ -500,7 +500,7 @@ export default function Home() {
                     plans={farmhouseList}
                     getImageUrl={getImageUrl}
                     handleScroll={handleScroll}
-                    onViewAll={() => handleViewAll('farmhouse_barn')}
+                    onViewAll={() => handleViewAll('farmhouse')}
                   />
                 )}
               </>
@@ -525,7 +525,7 @@ export default function Home() {
                       </p>
                     </div>
                     <button
-                      onClick={() => setActiveChip('compact_1bhk')}
+                      onClick={() => setActiveChip('1bhk')}
                       className="px-6 py-3 bg-slate-900 text-amber-400 hover:bg-slate-800 font-bold rounded-xl transition text-xs flex items-center gap-1 cursor-pointer mx-auto"
                     >
                       <span>View Available 1 BHK Plans</span>

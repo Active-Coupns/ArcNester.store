@@ -9,7 +9,6 @@ export async function generateMetadata({ params }) {
       .from('house_plans')
       .select('*')
       .eq('plan_id', plan_id)
-      .eq('category', 'compact_1bhk')
       .single();
 
     if (plan) {

@@ -7,9 +7,7 @@ export default async function sitemap() {
   try {
     const { data, error } = await supabase
       .from('house_plans')
-      .select('plan_id, created_at')
-      .eq('category', 'compact_1bhk')
-      .limit(10);
+      .select('plan_id, created_at');
     
     if (!error && data) {
       plans = data;
@@ -35,7 +33,25 @@ export default async function sitemap() {
   ];
 
   // 2. Dynamic Routes for individual plans
-  const planRoutes = plans.map((plan) => ({
+  let counter1bhk = 0;
+  const mappedPlans = plans.map(p => {
+    let categoryId = '1bhk';
+    const cat = p.category?.toLowerCase() || '';
+    if (cat.includes('1bhk') || cat.includes('tiny')) categoryId = '1bhk';
+    else if (cat.includes('2bhk')) categoryId = '2bhk';
+    else if (cat.includes('3bhk')) categoryId = '3bhk';
+    else if (cat.includes('villa') || cat.includes('duplex') || cat.includes('luxury') || cat.includes('spanish') || cat.includes('haveli')) categoryId = 'villas';
+    else if (cat.includes('farm') || cat.includes('barn') || cat.includes('ranch') || cat.includes('a_frame')) categoryId = 'farmhouse';
+
+    let isPub = false;
+    if (categoryId === '1bhk' && counter1bhk < 10) {
+      isPub = true;
+      counter1bhk++;
+    }
+    return { ...p, isPublished: isPub };
+  }).filter(p => p.isPublished);
+
+  const planRoutes = mappedPlans.map((plan) => ({
     url: `${baseUrl}/plans/${plan.plan_id}`,
     lastModified: plan.created_at ? new Date(plan.created_at) : new Date(),
     changeFrequency: 'weekly',

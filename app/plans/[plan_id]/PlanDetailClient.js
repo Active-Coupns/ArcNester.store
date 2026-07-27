@@ -180,31 +180,48 @@ export default function PlanDetailPage({ params }) {
           const { data: allPlans, error: allPlansError } = await supabase
             .from('house_plans')
             .select('*')
-            .eq('category', 'compact_1bhk')
-            .order('plan_id', { ascending: true })
-            .limit(10);
+            .order('plan_id', { ascending: true });
 
           if (!allPlansError && allPlans) {
+            let counter1bhk = 0;
+            const mapped = (allPlans || []).map(p => {
+              let categoryId = '1bhk';
+              const cat = p.category?.toLowerCase() || '';
+              if (cat.includes('1bhk') || cat.includes('tiny')) categoryId = '1bhk';
+              else if (cat.includes('2bhk')) categoryId = '2bhk';
+              else if (cat.includes('3bhk')) categoryId = '3bhk';
+              else if (cat.includes('villa') || cat.includes('duplex') || cat.includes('luxury') || cat.includes('spanish') || cat.includes('haveli')) categoryId = 'villas';
+              else if (cat.includes('farm') || cat.includes('barn') || cat.includes('ranch') || cat.includes('a_frame')) categoryId = 'farmhouse';
+              else categoryId = p.category || '1bhk';
+
+              let isPub = false;
+              if (categoryId === '1bhk' && counter1bhk < 10) {
+                isPub = true;
+                counter1bhk++;
+              }
+              return {
+                ...p,
+                category_id: categoryId,
+                isPublished: isPub
+              };
+            });
+
             // Static list of all available categories
             const staticCategories = [
-              'compact_1bhk',
-              'modern_2bhk',
-              'budget_3bhk',
-              'contemporary_luxury_villa',
-              'farm_house_plan',
-              'barndominium',
-              'tiny_house_micro_cabin',
-              'english_cottage_craftsman',
-              'kerala_sloping_roof',
-              'scandi_minimalist_a_frame'
+              '1bhk',
+              '2bhk',
+              '3bhk',
+              'villas',
+              'farmhouse'
             ];
             setCategories(staticCategories);
 
-            // Group representatives: take 1st plan of every other category
+            // Group representatives
             const otherCatsMap = {};
-            allPlans.forEach((p) => {
-              if (p.category !== data.category && !otherCatsMap[p.category]) {
-                otherCatsMap[p.category] = p;
+            mapped.forEach((p) => {
+              const currentCatId = data.category === 'compact_1bhk' ? '1bhk' : data.category;
+              if (p.isPublished && p.category_id !== currentCatId && !otherCatsMap[p.category_id]) {
+                otherCatsMap[p.category_id] = p;
               }
             });
             setOtherCategoryPlans(Object.values(otherCatsMap));
@@ -458,7 +475,7 @@ export default function PlanDetailPage({ params }) {
                 href={`/?category=${cat}`}
                 className="px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-100 transition shrink-0"
               >
-                {cat.replace(/_/g, ' ')}
+                {cat === '1bhk' ? 'Compact 1 BHK' : cat === '2bhk' ? 'Modern 2 BHK' : cat === '3bhk' ? 'Budget 3 BHK' : cat === 'villas' ? 'Luxury Villas' : cat === 'farmhouse' ? 'Farmhouse & Ranch' : cat.replace(/_/g, ' ')}
               </Link>
             ))}
           </div>
