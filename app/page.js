@@ -92,10 +92,23 @@ export default function Home() {
           else categoryId = p.category || '1bhk';
 
           let isPub = false;
-          if (categoryId === '1bhk' && counter1bhk < 10) {
-            isPub = true;
-            counter1bhk++;
+          const dbIsPublished = p.is_published !== undefined && p.is_published !== null
+            ? p.is_published
+            : (p.raw_json?.is_published !== undefined && p.raw_json?.is_published !== null
+               ? p.raw_json.is_published
+               : (p.seo_data?.is_published !== undefined && p.seo_data?.is_published !== null
+                  ? p.seo_data.is_published
+                  : null));
+
+          if (dbIsPublished !== null) {
+            isPub = dbIsPublished;
+          } else {
+            if (categoryId === '1bhk' && counter1bhk < 10) {
+              isPub = true;
+              counter1bhk++;
+            }
           }
+
           return {
             ...p,
             category_id: categoryId,

@@ -182,12 +182,30 @@ export default function AdminDashboard() {
       }
 
       if (data) {
-        // Map default parameters if database doesn't have is_published/published_at columns yet
-        const mappedPlans = data.map((p) => ({
-          ...p,
-          is_published: p.is_published !== undefined && p.is_published !== null ? p.is_published : true,
-          published_at: p.published_at !== undefined && p.published_at !== null ? p.published_at : (p.created_at || new Date().toISOString())
-        }));
+        // Map default parameters if database doesn't have is_published/published_at columns yet (with JSONB fallbacks)
+        const mappedPlans = data.map((p) => {
+          const is_pub = p.is_published !== undefined && p.is_published !== null
+            ? p.is_published
+            : (p.raw_json?.is_published !== undefined && p.raw_json?.is_published !== null
+               ? p.raw_json.is_published
+               : (p.seo_data?.is_published !== undefined && p.seo_data?.is_published !== null
+                  ? p.seo_data.is_published
+                  : true));
+                  
+          const pub_at = p.published_at !== undefined && p.published_at !== null
+            ? p.published_at
+            : (p.raw_json?.published_at !== undefined && p.raw_json?.published_at !== null
+               ? p.raw_json.published_at
+               : (p.seo_data?.published_at !== undefined && p.seo_data?.published_at !== null
+                  ? p.seo_data.published_at
+                  : (p.created_at || new Date().toISOString())));
+
+          return {
+            ...p,
+            is_published: is_pub,
+            published_at: pub_at
+          };
+        });
         setDraftPlans(mappedPlans);
       }
     } catch (err) {
@@ -225,13 +243,46 @@ export default function AdminDashboard() {
         const planId = selectedPlans[i];
         const publishedAt = new Date(now.getTime() + i * 15 * 60 * 1000); // 15-Min Stagger
 
-        const { error } = await supabase
+        let { error } = await supabase
           .from('house_plans')
           .update({
             is_published: true,
             published_at: publishedAt.toISOString()
           })
           .eq('plan_id', planId);
+
+        // Fallback: If column is missing in schema, update raw_json or seo_data JSONB field instead
+        if (error && (error.message?.includes("column") || error.code === 'PGRST204' || error.message?.includes("schema cache"))) {
+          const { data: row } = await supabase
+            .from('house_plans')
+            .select('raw_json, seo_data')
+            .eq('plan_id', planId)
+            .single();
+
+          const updatedRawJson = {
+            ...(row?.raw_json || {}),
+            is_published: true,
+            published_at: publishedAt.toISOString(),
+            scheduled_publish_date: publishedAt.toISOString()
+          };
+
+          const updatedSeoData = {
+            ...(row?.seo_data || {}),
+            is_published: true,
+            published_at: publishedAt.toISOString(),
+            scheduled_publish_date: publishedAt.toISOString()
+          };
+
+          const resFallback = await supabase
+            .from('house_plans')
+            .update({
+              raw_json: updatedRawJson,
+              seo_data: updatedSeoData
+            })
+            .eq('plan_id', planId);
+
+          error = resFallback.error;
+        }
 
         if (error) throw error;
       }
