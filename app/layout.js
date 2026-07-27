@@ -30,6 +30,11 @@ export const metadata = {
     title: 'ArcNester.store | Premium Architectural House Plans',
     description: 'Download premium architectural concept drawings, 3D renders, and floor plans.',
     images: ['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&h=630&q=80'],
+  },
+  verification: {
+    other: {
+      'p:domain_verify': 'e18dfe5517592cd7230f7086429968e4',
+    },
   }
 };
 
