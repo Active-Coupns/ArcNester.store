@@ -158,7 +158,7 @@ export default function PlanDetailPage({ params }) {
           const { data: similarData, error: similarError } = await supabase
             .from('house_plans')
             .select('*')
-            .eq('category', data.category)
+            .eq('category', data?.category)
             .neq('plan_id', plan_id);
 
           if (!similarError) {
@@ -168,7 +168,7 @@ export default function PlanDetailPage({ params }) {
                 .from('house_plans')
                 .select('*')
                 .eq('category', 'compact_1bhk')
-                .eq('bedrooms', data.bedrooms || 0)
+                .eq('bedrooms', data?.bedrooms || 0)
                 .neq('plan_id', plan_id)
                 .limit(10);
               finalSimilar = fallbackData || [];
@@ -219,7 +219,7 @@ export default function PlanDetailPage({ params }) {
             // Group representatives
             const otherCatsMap = {};
             mapped.forEach((p) => {
-              const currentCatId = data.category === 'compact_1bhk' ? '1bhk' : data.category;
+              const currentCatId = data?.category === 'compact_1bhk' ? '1bhk' : data?.category;
               if (p.isPublished && p.category_id !== currentCatId && !otherCatsMap[p.category_id]) {
                 otherCatsMap[p.category_id] = p;
               }

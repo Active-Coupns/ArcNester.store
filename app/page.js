@@ -145,9 +145,9 @@ export default function Home() {
         const planId = parts[planIdIndex];
         const imgName = parts[parts.length - 1];
         url = `${r2Host}/plans/${category}/${planId}/${imgName}`;
-      } else if (plan && plan.category && plan.plan_id) {
+      } else if (plan && plan.category && plan?.plan_id) {
         const imgName = parts[parts.length - 1];
-        url = `${r2Host}/plans/${plan.category}/${plan.plan_id}/${imgName}`;
+        url = `${r2Host}/plans/${plan.category}/${plan?.plan_id}/${imgName}`;
       } else {
         const plansIndex = url.indexOf('plans/');
         if (plansIndex !== -1) {
@@ -187,15 +187,15 @@ export default function Home() {
     const is2bhk = normalizedQuery.includes('2bhk') || normalizedQuery.includes('2bed') || normalizedQuery.includes('2b');
     const is3bhk = normalizedQuery.includes('3bhk') || normalizedQuery.includes('3bed') || normalizedQuery.includes('3b') || normalizedQuery.includes('3+bhk');
     
-    const bedrooms = plan.bedrooms || 0;
+    const bedrooms = plan?.bedrooms || 0;
     
     if (is1bhk && bedrooms === 1) return true;
     if (is2bhk && bedrooms === 2) return true;
     if (is3bhk && bedrooms >= 3) return true;
     
     // Match numeric area values
-    const builtUp = (plan.technical_specifications?.built_up_area || '').toLowerCase();
-    const sqft = String(plan.square_footage || '');
+    const builtUp = (plan?.technical_specifications?.built_up_area || '').toLowerCase();
+    const sqft = String(plan?.square_footage || '');
     if (normalizedQuery.match(/^\d+$/)) {
       if (sqft.includes(normalizedQuery) || builtUp.includes(normalizedQuery)) {
         return true;
@@ -203,17 +203,17 @@ export default function Home() {
     }
     
     // Base string matcher
-    const title = (plan.title || '').toLowerCase().replace(/\s+/g, '');
-    const category = (plan.category || '').toLowerCase().replace(/\s+/g, '');
-    const desc = (plan.short_description || plan.blog_content || '').toLowerCase().replace(/\s+/g, '');
+    const title = (plan?.title || '').toLowerCase().replace(/\s+/g, '');
+    const category = (plan?.category || '').toLowerCase().replace(/\s+/g, '');
+    const desc = (plan?.short_description || plan?.blog_content || '').toLowerCase().replace(/\s+/g, '');
     
     const combinedText = `${title}${category}${desc}`;
     return combinedText.includes(normalizedQuery);
   };
 
-  // Filter plans based on search bar
+  // Filter plans based on search bar with safe fallback defaults
   const getFilteredList = (categoryType) => {
-    let list = plans.filter(p => p.isPublished);
+    let list = plans?.filter(p => p?.isPublished) || [];
 
     // Apply smart flexible search query
     if (searchQuery.trim()) {
@@ -224,13 +224,13 @@ export default function Home() {
     if (categoryType === 'featured') {
       return list.slice(0, 12);
     } else if (categoryType === '1bhk') {
-      return list.filter((p) => p.category_id === '1bhk');
+      return list.filter((p) => p?.category_id === '1bhk');
     } else if (categoryType === '2bhk_3bhk') {
-      return list.filter((p) => p.category_id === '2bhk' || p.category_id === '3bhk');
+      return list.filter((p) => p?.category_id === '2bhk' || p?.category_id === '3bhk');
     } else if (categoryType === 'villas_duplex') {
-      return list.filter((p) => p.category_id === 'villas');
+      return list.filter((p) => p?.category_id === 'villas');
     } else if (categoryType === 'farmhouse_barn') {
-      return list.filter((p) => p.category_id === 'farmhouse');
+      return list.filter((p) => p?.category_id === 'farmhouse');
     }
 
     return list;
@@ -254,10 +254,10 @@ export default function Home() {
     }
   };
 
-  // Dynamic filtering logic
+  // Dynamic filtering logic with safe fallback defaults
   const displayedPlans = activeChip === 'All'
-    ? plans.filter(p => p.isPublished)
-    : plans.filter(p => p.category_id === activeChip && p.isPublished);
+    ? (plans?.filter(p => p?.isPublished) || [])
+    : (plans?.filter(p => p?.category_id === activeChip && p?.isPublished) || []);
 
 
   // Static list of all available categories
@@ -514,19 +514,13 @@ export default function Home() {
                 </div>
 
                 {displayedPlans.length === 0 ? (
-                  <div className="bg-white rounded-3xl border border-slate-100 p-8 sm:p-12 text-center max-w-xl mx-auto shadow-sm flex flex-col items-center gap-6 mt-4 w-full">
-                    <div className="h-16 w-16 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500">
-                      <LayoutGrid className="h-8 w-8 animate-pulse" />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <h3 className="text-lg font-extrabold text-slate-900">No Plans Uploaded Yet in This Category</h3>
-                      <p className="text-slate-450 text-xs font-light leading-relaxed">
-                        We are publishing 10 new architectural blueprints daily! Stay tuned or request a custom layout.
-                      </p>
-                    </div>
+                  <div className="text-center py-12 px-4 border border-dashed border-slate-700 bg-slate-900/40 rounded-xl my-6 w-full max-w-xl mx-auto">
+                    <h3 className="text-lg font-semibold text-amber-400">Plans Coming Soon! 🏗️</h3>
+                    <p className="text-sm text-slate-450 mt-2">We are uploading 10 new architectural blueprints daily. Check back tomorrow!</p>
                     <button
+                      type="button"
                       onClick={() => setActiveChip('1bhk')}
-                      className="px-6 py-3 bg-slate-900 text-amber-400 hover:bg-slate-800 font-bold rounded-xl transition text-xs flex items-center gap-1 cursor-pointer mx-auto"
+                      className="mt-6 px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl transition text-xs flex items-center gap-1 cursor-pointer mx-auto"
                     >
                       <span>View Available 1 BHK Plans</span>
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -540,18 +534,18 @@ export default function Home() {
                       const previewImage = getImageUrl(plan.images?.['01_exterior_front_elevation'], plan) || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80';
                       return (
                         <div
-                          key={plan.plan_id}
+                          key={plan?.plan_id}
                           className="bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl hover:border-slate-200 transition-all duration-300 flex flex-col justify-between"
                         >
-                          <Link href={`/plans/${plan.plan_id}`} className="cursor-pointer block relative aspect-[4/3] overflow-hidden bg-slate-100 group">
+                          <Link href={`/plans/${plan?.plan_id || ''}`} className="cursor-pointer block relative aspect-[4/3] overflow-hidden bg-slate-100 group">
                             <img
-                              src={previewImage}
-                              alt={plan.title}
+                              src={previewImage || ''}
+                              alt={plan?.title}
                               loading="lazy"
                               draggable="false"
                               onError={(e) => {
                                 e.target.onError = null;
-                                e.target.src = getFallbackImage(plan.plan_id);
+                                e.target.src = getFallbackImage(plan?.plan_id);
                               }}
                               onContextMenu={(e) => e.preventDefault()}
                               className="w-full h-full object-cover group-hover:scale-105 transition duration-500 select-none"
@@ -576,36 +570,36 @@ export default function Home() {
                           <div className="p-5 flex flex-col flex-1 justify-between">
                             <div>
                               <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block mb-1">
-                                {plan.plan_id}
+                                {plan?.plan_id}
                               </span>
-                              <Link href={`/plans/${plan.plan_id}`} className="cursor-pointer block">
+                              <Link href={`/plans/${plan?.plan_id || ''}`} className="cursor-pointer block">
                                 <h3 className="text-base font-extrabold text-slate-900 line-clamp-1 leading-snug hover:text-amber-500 transition">
-                                  {plan.title}
+                                  {plan?.title}
                                 </h3>
                               </Link>
                               <p className="text-slate-450 text-xs font-light mt-2 line-clamp-2 leading-relaxed">
-                                {plan.short_description || plan.blog_content}
+                                {plan?.short_description || plan?.blog_content}
                               </p>
                             </div>
 
                             <div className="mt-5 pt-4 border-t border-slate-50 flex items-center justify-between text-xs text-slate-500">
                               <div className="flex items-center gap-1">
                                 <Maximize2 className="h-3.5 w-3.5 text-amber-500" />
-                                <span className="font-bold text-slate-700">{plan.square_footage || 0}</span> sq ft
+                                <span className="font-bold text-slate-700">{plan?.square_footage || 0}</span> sq ft
                               </div>
                               <div className="flex items-center gap-1">
                                 <Bed className="h-3.5 w-3.5 text-amber-500" />
-                                <span className="font-bold text-slate-700">{plan.bedrooms || 0}</span> BHK
+                                <span className="font-bold text-slate-700">{plan?.bedrooms || 0}</span> BHK
                               </div>
                               <div className="flex items-center gap-1">
                                 <Bath className="h-3.5 w-3.5 text-amber-500" />
-                                <span className="font-bold text-slate-700">{plan.bathrooms || 0}</span> Bath
+                                <span className="font-bold text-slate-700">{plan?.bathrooms || 0}</span> Bath
                               </div>
                             </div>
 
                             <div className="mt-5">
                               <Link 
-                                href={`/plans/${plan.plan_id}`}
+                                href={`/plans/${plan?.plan_id || ''}`}
                                 className="w-full py-2.5 bg-slate-50 hover:bg-amber-500 hover:text-white border border-slate-200 hover:border-transparent font-bold text-slate-700 rounded-xl transition duration-300 text-xs flex items-center justify-center gap-1 text-center"
                               >
                                 <span>View Plan Details</span>
@@ -705,19 +699,19 @@ function CarouselSection({ title, id, plans, getImageUrl, handleScroll, onViewAl
 
           return (
             <div
-              key={plan.plan_id}
+              key={plan?.plan_id}
               className="snap-start shrink-0 w-full max-w-[calc(100vw-2rem)] sm:w-[320px] md:w-[350px] mx-auto bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl hover:border-slate-200 transition-all duration-300 flex flex-col justify-between"
             >
               {/* Image Preview with Hover Zoom and Watermark protection */}
-              <Link href={`/plans/${plan.plan_id}`} className="cursor-pointer block relative aspect-[4/3] overflow-hidden bg-slate-100 group">
+              <Link href={`/plans/${plan?.plan_id || ''}`} className="cursor-pointer block relative aspect-[4/3] overflow-hidden bg-slate-100 group">
                 <img
-                  src={previewImage}
-                  alt={plan.title}
+                  src={previewImage || ''}
+                  alt={plan?.title}
                   loading="lazy"
                   draggable="false"
                   onError={(e) => {
                     e.target.onError = null;
-                    e.target.src = getFallbackImage(plan.plan_id);
+                    e.target.src = getFallbackImage(plan?.plan_id);
                   }}
                   onContextMenu={(e) => e.preventDefault()}
                   className="w-full h-full object-cover group-hover:scale-105 transition duration-500 select-none"
@@ -743,17 +737,17 @@ function CarouselSection({ title, id, plans, getImageUrl, handleScroll, onViewAl
               <div className="p-5 flex flex-col flex-1 justify-between">
                 <div>
                   <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block mb-1">
-                    {plan.plan_id}
+                    {plan?.plan_id}
                   </span>
                   
-                  <Link href={`/plans/${plan.plan_id}`} className="cursor-pointer block">
+                  <Link href={`/plans/${plan?.plan_id || ''}`} className="cursor-pointer block">
                     <h3 className="text-base font-extrabold text-slate-900 line-clamp-1 leading-snug hover:text-amber-500 transition">
-                      {plan.title}
+                      {plan?.title}
                     </h3>
                   </Link>
                   
                   <p className="text-slate-450 text-xs font-light mt-2 line-clamp-2 leading-relaxed">
-                    {plan.short_description || plan.blog_content}
+                    {plan?.short_description || plan?.blog_content}
                   </p>
                 </div>
 
@@ -761,22 +755,22 @@ function CarouselSection({ title, id, plans, getImageUrl, handleScroll, onViewAl
                 <div className="mt-5 pt-4 border-t border-slate-50 flex items-center justify-between text-xs text-slate-500">
                   <div className="flex items-center gap-1">
                     <Maximize2 className="h-3.5 w-3.5 text-amber-500" />
-                    <span className="font-bold text-slate-700">{plan.square_footage || 0}</span> sq ft
+                    <span className="font-bold text-slate-700">{plan?.square_footage || 0}</span> sq ft
                   </div>
                   <div className="flex items-center gap-1">
                     <Bed className="h-3.5 w-3.5 text-amber-500" />
-                    <span className="font-bold text-slate-700">{plan.bedrooms || 0}</span> BHK
+                    <span className="font-bold text-slate-700">{plan?.bedrooms || 0}</span> BHK
                   </div>
                   <div className="flex items-center gap-1">
                     <Bath className="h-3.5 w-3.5 text-amber-500" />
-                    <span className="font-bold text-slate-700">{plan.bathrooms || 0}</span> Bath
+                    <span className="font-bold text-slate-700">{plan?.bathrooms || 0}</span> Bath
                   </div>
                 </div>
 
                 {/* CTA Action button */}
                 <div className="mt-5">
                   <Link 
-                    href={`/plans/${plan.plan_id}`}
+                    href={`/plans/${plan?.plan_id || ''}`}
                     className="w-full py-2.5 bg-slate-50 hover:bg-amber-500 hover:text-white border border-slate-200 hover:border-transparent font-bold text-slate-700 rounded-xl transition duration-300 text-xs flex items-center justify-center gap-1 text-center"
                   >
                     <span>View Plan Details</span>
