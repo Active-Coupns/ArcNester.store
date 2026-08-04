@@ -152,31 +152,8 @@ export default function PlanDetailPage({ params }) {
           setActiveImgIndex(0);
         }
 
-        // Fetch similar plans and other category representatives
+        // Fetch all plans to group other categories and similar plans dynamically
         if (data) {
-          // 1. Fetch similar plans in same category
-          const { data: similarData, error: similarError } = await supabase
-            .from('house_plans')
-            .select('*')
-            .eq('category', data?.category)
-            .neq('plan_id', plan_id);
-
-          if (!similarError) {
-            let finalSimilar = similarData || [];
-            if (finalSimilar.length < 2) {
-              const { data: fallbackData } = await supabase
-                .from('house_plans')
-                .select('*')
-                .eq('category', 'compact_1bhk')
-                .eq('bedrooms', data?.bedrooms || 0)
-                .neq('plan_id', plan_id)
-                .limit(10);
-              finalSimilar = fallbackData || [];
-            }
-            setSimilarPlans(finalSimilar);
-          }
-
-          // 2. Fetch all plans to group other categories dynamically
           const { data: allPlans, error: allPlansError } = await supabase
             .from('house_plans')
             .select('*')
@@ -219,6 +196,13 @@ export default function PlanDetailPage({ params }) {
               };
             });
 
+            // 1. Filter similar plans in same category (only published)
+            let finalSimilar = mapped.filter(p => p.isPublished && p.category === data.category && p.plan_id !== plan_id);
+            if (finalSimilar.length < 2) {
+              finalSimilar = mapped.filter(p => p.isPublished && p.category_id === '1bhk' && p.bedrooms === (data.bedrooms || 0) && p.plan_id !== plan_id);
+            }
+            setSimilarPlans(finalSimilar);
+
             // Static list of all available categories
             const staticCategories = [
               '1bhk',
@@ -229,7 +213,7 @@ export default function PlanDetailPage({ params }) {
             ];
             setCategories(staticCategories);
 
-            // Group representatives
+            // Group representatives (only published)
             const otherCatsMap = {};
             mapped.forEach((p) => {
               const currentCatId = data?.category === 'compact_1bhk' ? '1bhk' : data?.category;
